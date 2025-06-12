@@ -41,7 +41,7 @@ def train_ae():
     dl = DataLoader(ds, batch_size=32, shuffle=True)
     ae = AE(latent_dim=64).to(device)
     opt = optim.Adam(ae.parameters(), lr=1e-3)
-    for epoch in range(1,11):
+    for epoch in range(1,31):
         ae.train()
         tot=0
         for x,_ in dl:
