@@ -3,5 +3,5 @@ clear-env
 datasets
 
 clear/pthFiles
-
-DiCE
+DiCE/pthFiles
+dice-env

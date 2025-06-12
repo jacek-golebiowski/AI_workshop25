@@ -49,3 +49,60 @@ pip install -r requirements.txt
 cd clear
 
 make run DATASET_NAME=carpet
+
+
+
+DICE
+
+About This Project
+This part of the project demonstrates the use of the DiCE (Diverse Counterfactual Explanations) library for generating counterfactuals in image anomaly detection using the MVTec dataset.
+
+While DiCE was originally designed for tabular data, here it has been adapted to work with images via preprocessing into a reduced latent representation using Principal Component Analysis (PCA). After compression, DiCE operates directly on this low-dimensional tabular form.
+
+How It Works
+1. CNN Classifier Training
+
+A lightweight convolutional classifier (SimpleCNN) is trained on MVTec grayscale images (resized to 128×128) to distinguish between normal and anomalous samples. The model is saved to pthFiles/.
+
+2. PCA Dimensionality Reduction
+
+Flattened images (128×128 → 16384 features) are reduced to 64 principal components using PCA (Principal Component Analysis).
+This converts image data into a tabular form suitable for DiCE.
+3. DiCE Model Wrapping
+
+The PyTorch model is wrapped to interface with DiCE's explainer. DiCE operates in PCA space.
+
+4. Counterfactual Generation
+
+For each query image, DiCE attempts to generate counterfactuals that flip the class (e.g. anomaly → normal).
+Due to the dataset structure, DiCE successfully generates anomaly → normal counterfactuals, but struggles to find valid solutions for normal → anomaly.
+The generated counterfactuals are decoded back to image space using inverse PCA.
+5. Visualization
+
+The original image, counterfactual image, and pixel-wise difference map are displayed and saved.
+All results are saved under ./generatedImages.
+
+
+
+How to run
+Create environment and install dependencies:
+
+python3 -m venv dice-env
+source dice-env/bin/activate.fish
+
+pip install --upgrade pip
+pip install -r requirements.txt
+
+
+
+Run on single dataset:
+
+make run DATASET_NAME=bottle
+
+
+
+Run full batch on all datasets: (This part is present but commented in the Makefile — you can enable it if needed.)
+
+make run_all
+
+This will automatically iterate over all 15 categories and generate counterfactuals for each.
