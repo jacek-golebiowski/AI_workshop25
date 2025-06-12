@@ -1,43 +1,43 @@
-##CLEAR
+CLEAR
 
-# About This Project
+About This Project
 
-This project features a **custom implementation of the CLEAR algorithm (Counterfactual Local Explanations via Regression)**, entirely rewritten from scratch in **PyTorch** and tailored specifically for **image anomaly detection using the MVTec dataset**.
+This project features a custom implementation of the CLEAR algorithm (Counterfactual Local Explanations via Regression), entirely rewritten from scratch in PyTorch and tailored specifically for image anomaly detection using the MVTec dataset.
 
-While the original CLEAR [(White et al., 2019)](https://arxiv.org/abs/2106.14556) was developed for tabular data and relied on TensorFlow, this version adapts the core methodology to operate within the **latent space of an AutoEncoder trained on image data**. It produces **visually interpretable counterfactual images** that explain classification decisions by answering: _"what minimal change would flip this classification?"_
+While the original CLEAR [(White et al., 2019)](https://arxiv.org/abs/2106.14556) was developed for tabular data and relied on TensorFlow, this version adapts the core methodology to operate within the latent space of an AutoEncoder trained on image data. It produces **visually interpretable counterfactual images** that explain classification decisions by answering: _"what minimal change would flip this classification?"_
 
 ---
 
-## How It Works
+How It Works
 
-### 1. AutoEncoder Training
+1. AutoEncoder Training
 A convolutional AutoEncoder is trained on MVTec grayscale images (resized to 128×128), compressing them into a 64-dimensional latent space. The decoder learns to reconstruct images from this compressed representation.
 
-### 2. CNN Classifier Training
+2. CNN Classifier Training
 A lightweight convolutional classifier is trained to distinguish between _normal_ and _anomalous_ images from the dataset.
 
-### 3. Image Selection
+3. Image Selection
 From the MVTec test set, one normal and one anomalous image are selected as input examples.
 
-### 4. Latent Sampling + Regression (CLEAR)
+4. Latent Sampling + Regression (CLEAR)
 - The image is encoded into latent space.
 - Thousands of latent vectors are sampled from a local Gaussian distribution around it.
 - Each vector is decoded and passed through the classifier.
 - The classifier's predicted labels are used to train a **local logistic regression model** in latent space.
 
-### 5. Counterfactual Generation
+5. Counterfactual Generation
 - A target class is defined (e.g., flip anomaly → normal).
 - CLEAR computes the minimal direction (Δz) in latent space that crosses the decision boundary.
 - The modified latent vector is decoded into a counterfactual image.
 
-### 6. Visualization
+6. Visualization
 - The original image, counterfactual image, and their pixel-wise difference map are saved.
 - Classifier predictions are printed for both original and counterfactual.
 - All results are saved under `./generatedImages`.
 
 ---
 
-## How to run
+How to run
 
 python3 -m venv clear-env
 
